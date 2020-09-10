@@ -3,13 +3,23 @@
 #include <string.h>
 
 #define MAX_ALUNOS 50
+#define MAX_TRABALHOS 20
 
-typedef struct {
+struct trabalhos{
+    int peso;
+    float notas;
+    int contador;
+    int ativo;
+};
+
+
+
+typedef struct aluno{
     int num_aluno;
     char nome[50];
-    float trabalho_pratico[MAX_ALUNOS];
     int notas[4];
     int ativo;
+    struct trabalhos trab_pratico[MAX_TRABALHOS];
 
 } Aluno;
 
@@ -22,11 +32,12 @@ void menu_principal();
 void ajuda();
 void sair();
 void error();
+void vernotas();
 
 int main() {
 
 
-    //menu_principal();
+    menu_principal();
     return 0;
 }
 
@@ -66,10 +77,11 @@ void criar_novo_aluno() {
         printf("Qual o número do Aluno?\n");
         scanf("%d", &num_aluno);
 
-                for (int i = 0; i < MAX_ALUNOS; i++)  {
+        for (int i = 0; i < MAX_ALUNOS; i++)  {
             if (alunos[i].ativo == 0) {
                 alunos[i].num_aluno = num_aluno;
                 strcpy(alunos[i].nome, nome);
+                alunos[i].ativo = 1;
                 break; //sair do ciclo if 
             }
         }
@@ -115,38 +127,99 @@ void inserir_trabalhos_praticos() {
             if (peso >= 0 && peso <= 100)
                 break;
         }
-
+        printf("%f %d", nota, peso );
 
         for (int i = 0; i < MAX_ALUNOS; i++)  {
             if (alunos[i].num_aluno == num_aluno) {
-                for(int f = 1; f < MAX_ALUNOS; i++) {
-                    if(alunos[i].trabalho_pratico[f] == 0.0) {
-
-                    } 
+                for(int f = 0; f < MAX_TRABALHOS; f++) {
+                    if(alunos[i].trab_pratico[f].ativo == 0) {
+                        alunos[i].trab_pratico[f].notas = nota;
+                        alunos[i].trab_pratico[f].peso = peso;
+                        alunos[i].trab_pratico[f].ativo = 1;
+                        alunos[i].trab_pratico[f].contador = f++;
+                        break;
+                    }
                 }
-
             }
         }
+        
 
         printf("Deseja adicionar mais algum aluno?\n\n Sim - 1 \n Não - 2 \n\n");
         scanf("%d", &op);
-
-
-        
 
         if(op == 2)
             break;
     }
 }
 
+void alterar_info() {
+
+    int num_aluno;
+    float peso;
+    float num;
+    char nome[50];
+    int op;
+
+    printf("Deseja altera nome ou peso da nota? \n1- nome 2- peso");
+    scanf("%d", &op);
+
+    printf("Qual o número do aluno?");
+    scanf("%d", &num_aluno);
+
+    if(op == 1) {
+        printf("Qual o nome para qual deve alterar?");
+        fgets(nome, sizeof(nome), stdin);
+        
+        for (int i = 0; i < MAX_ALUNOS; i++)  {
+            if (alunos[i].num_aluno == num_aluno) {
+                strcpy(alunos[i].nome, nome);
+            }
+        }
+    }else if (op == 2) {
+        printf("Qual o numero da prova que deseja alterar?");
+        scanf("%f", &num);
+        printf("Qual o peso que irá ter?");
+        scanf("%f", &peso);
+
+        for( int i = 0; i< MAX_ALUNOS; i++) {
+            if(alunos[i].num_aluno == num_aluno) {
+
+            }
+        }
+    }
+    
+}
 
 
+
+//! Remover e) alunos ou notas 
+void remover() {
+    int num_aluno;
+    int num_trabalho;
+
+    printf("Qual o num do aluno que deseja remover?");
+    scanf("%d", &num_aluno);
+
+    for(int i = 0; i < MAX_ALUNOS; i++) {
+        if(alunos[i].num_aluno == num_aluno) {
+            alunos[i].ativo = 0;
+        }
+    } 
+}
 
 void escolha_menu_principal(int escolha) {
     
     switch(escolha) {
         case 1:
             criar_novo_aluno();
+            break;
+
+        case 2:
+            inserir_trabalhos_praticos();
+            break;
+
+        case 3:
+            vernotas();
             break;
 
         case 4:
@@ -159,6 +232,21 @@ void escolha_menu_principal(int escolha) {
     }
 }
 
+void vernotas() {
+    
+    printf("Cabeçalho alunos\n\n");
+
+    for(int i = 0; i< MAX_ALUNOS; i++) {
+        if(alunos[i].ativo == 1) {
+            for(int f = 0; f < 10; f++){
+                if(alunos[i].trab_pratico[f].ativo == 1){
+                    printf("%s %d %d %0.2f %d ",alunos[i].nome, alunos[i].num_aluno, alunos[i].trab_pratico[f].peso, alunos[i].trab_pratico[f].notas, alunos[i].trab_pratico[f].contador);
+                }
+            }
+        }
+    }
+
+}
 
 void sair() {
     printf("\n\nEste trabalho foi realizado por Leonardo Menezes Franco\n");
