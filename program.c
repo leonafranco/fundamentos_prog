@@ -95,8 +95,13 @@ void criar_novo_aluno() {
                 alunos[i].num_aluno = num_aluno;
                 strcpy(alunos[i].nome, nome);
                 alunos[i].ativo = 1;
-                break; //sair do ciclo if 
+                printf("\nUtilizador criado com sucesso!\n");
+                break; //sair do ciclo 
+            }else if (alunos[MAX_ALUNOS].ativo == 1)
+            {
+                printf("\n\nImpossivel criar novo aluno\n\n");
             }
+            
         }
 
         printf("Deseja adicionar mais algum aluno?\n\n Sim - 1 \n Não - 2 \n\n");
@@ -116,7 +121,6 @@ void inserir_trabalhos_praticos() {
     int num_nota;
     float nota;
     float peso;
-    float trabalho_pratico[2][MAX_ALUNOS];
     int count;
     int op;
     int inserir_alterar;
@@ -126,7 +130,7 @@ void inserir_trabalhos_praticos() {
         count = 1;
 
         getchar();
-        printf("Deseja Inserir ou alterar notas?\n");
+        printf("Deseja Inserir ou alterar notas?\n1- Inserir 2- Alterar\n");
         scanf("%d", &inserir_alterar);
         
 
@@ -138,6 +142,10 @@ void inserir_trabalhos_praticos() {
             scanf("%f", &nota);
             if (nota >= 0.0 && nota <= 20.0)
                 break;
+                else {
+                    printf("\nIntroduza uma nota de 0 a 20\n");
+                }
+                
         }
 
         while(1) {
@@ -145,6 +153,9 @@ void inserir_trabalhos_praticos() {
             scanf("%f", &peso);
             if (peso >= 0 && peso <= 100)
                 break;
+            else {
+                printf("\nIntroduza um peso de 0 a 100\n");
+            }
         }
 
         switch (inserir_alterar) {
@@ -158,10 +169,16 @@ void inserir_trabalhos_praticos() {
                                 alunos[i].trab_pratico[f].ativo = 1;
                                 count += f;
                                 alunos[i].trab_pratico[f].contador = count;
+                                printf("\nTrabalho inserido com sucesso!\n");
                                 break;
                             }
                         }
+                        break;
+                    }else if (alunos[i].num_aluno != num_aluno && i == MAX_ALUNOS-1)
+                    {
+                        printf("\nNão existe nenhum aluno com o número %d\n", num_aluno);
                     }
+                    
                 }
             break;
 
@@ -174,11 +191,22 @@ void inserir_trabalhos_praticos() {
                             if(alunos[i].trab_pratico[f].contador == num_nota) {
                                 alunos[i].trab_pratico[f].notas = nota;
                                 alunos[i].trab_pratico[f].peso = peso;
+                                printf("\nNota Alterada com Sucesso!\n");
                                 break;
+                            }else if (alunos[i].num_aluno == num_aluno && alunos[i].trab_pratico[f].contador != num_nota && f == MAX_TRABALHOS-1)
+                            {
+                                printf("\nNão existe nenhuma nota com o número %d\n", num_nota);
                             }
+                            
                         }
+                        break;
+                    }else if (alunos[i].num_aluno != num_aluno && i == MAX_ALUNOS-1)
+                    {
+                        printf("\nNão existe nenhum aluno com o número %d\n", num_aluno);
                     }
+                    
                 }
+                break;
         
         
             default:
@@ -200,43 +228,80 @@ void alterar_info() {
 
     int num_aluno;
     float peso;
-    float num;
+    int num;
     char nome[50];
-    int op;
+    int op_principal;
+    int op_secundaria;
 
-    printf("\n\nDeseja altera nome ou peso da nota? \n1- nome 2- peso\n");
-    scanf("%d", &op);
+    while(1) {
 
-    printf("Qual o número do aluno?\n");
-    scanf("%d", &num_aluno);
+        printf("\n\nDeseja altera nome ou peso da nota? \n1- nome 2- peso\n");
+        scanf("%d", &op_principal);
 
-    if(op == 1) {
-        getchar();
-        printf("Qual o nome para qual deve alterar?\n");
-        fgets(nome, sizeof(nome), stdin);
-        
-        for (int i = 0; i < MAX_ALUNOS; i++)  {
-            if (alunos[i].num_aluno == num_aluno) {
-                strcpy(alunos[i].nome, nome);
+        printf("Qual o número do aluno?\n");
+        scanf("%d", &num_aluno);
+
+        if(op_principal == 1) {
+            getchar();
+            printf("Qual o nome para qual deve alterar?\n");
+            fgets(nome, sizeof(nome), stdin);
+            
+            for (int i = 0; i < MAX_ALUNOS; i++)  {
+                if (alunos[i].num_aluno == num_aluno) {
+                    strcpy(alunos[i].nome, nome);
+                    printf("\n\nNome alterado com sucesso\n\n");
+                    break;
+                }else if (alunos[i].num_aluno != num_aluno && i == MAX_ALUNOS-1)
+                {
+                    printf("\n\n Não existe nenhum aluno com o número %d", num_aluno);
+                }
+                
             }
-        }
-    }else if (op == 2) {
-        printf("Qual o numero da prova que deseja alterar?\n");
-        scanf("%f", &num);
-        printf("Qual o peso que irá ter?\n");
-        scanf("%f", &peso);
+        }else if (op_principal == 2) {
+            printf("Qual o numero da prova que deseja alterar?\n");
+            scanf("%d", &num);
 
-        for(int i = 0; i < MAX_ALUNOS; i++ ) {
-            if(alunos[i].num_aluno == num_aluno) {
-                for(int f = 0; f < MAX_TRABALHOS; f++) {
-                    if(alunos[i].trab_pratico[f].contador == num) {
-                        alunos[i].trab_pratico[f].peso = peso;
-                    }
+            while(1) {
+                printf("Quanto vale a nota? 0-100\n");
+                scanf("%f", &peso);
+                if (peso >= 0 && peso <= 100)
+                    break;
+                else {
+                    printf("\nIntroduza um peso de 0 a 100\n");
                 }
             }
+
+            for(int i = 0; i < MAX_ALUNOS; i++ ) {
+                if(alunos[i].num_aluno == num_aluno) {
+                    for(int f = 0; f < MAX_TRABALHOS; f++) {
+                        if(alunos[i].trab_pratico[f].contador == num) {
+                            alunos[i].trab_pratico[f].peso = peso;
+                            break;
+                        }else if (alunos[i].num_aluno == num_aluno && alunos[i].trab_pratico[f].contador != num && f == MAX_TRABALHOS-1)
+                        {
+                            printf("\nNão existe nenhuma nota com o indice %d\n", num);
+                        }
+                    }
+                    break;
+                }else if (alunos[i].num_aluno != num_aluno && i == MAX_ALUNOS-1)
+                {
+                    printf("\nNão existe nenhum aluno com o número %d\n", num_aluno);
+                }
+                
+            }
+        }else
+        {
+            printf("\n\nIntroduza uma opção valida!\n\n");
         }
+        
+
+        printf("\n\nDeseja alterar mais algum aluno ou?\n\n Sim - 1 \n Não - 2 \n\n");
+        scanf("%d", &op_secundaria);
+
+        if(op_secundaria == 2)
+            break;
+
     }
-    
     
 }
 
@@ -244,46 +309,82 @@ void alterar_info() {
 void remover() {
     int num_aluno;
     int num_trabalho;
-    int op;
+    int op_principal;
+    int op_secundaria;
     int count = 1;
 
-    printf("Deseja alterar alunos ou notas de alunos?  \n1- Aluno 2- Notas\n");
-    scanf("%d", &op);
 
-    printf("Qual o num do aluno que deseja remover?\n");
-    scanf("%d", &num_aluno);
+    while(1) {
+        printf("Deseja alterar alunos ou notas de alunos?  \n1- Aluno 2- Notas\n");
+        scanf("%d", &op_principal);
 
-    if(op == 1) {
-        for(int i = 0; i < MAX_ALUNOS; i++) {
-            if(alunos[i].num_aluno == num_aluno) {
-                alunos[i].ativo = 0;
-            }
-        } 
-    }else if (op == 2){  
-        printf("Qual o número do trabalho que seja remover?\n");
-        scanf("%d", &num_trabalho);     
-        for(int i = 0; i < MAX_ALUNOS; i++) {
-            if(alunos[i].num_aluno == num_aluno) {
-                for(int f = 0; f < MAX_TRABALHOS; f++) {
-                    if(alunos[i].trab_pratico[f].contador == num_trabalho) {
+        printf("Qual o num do aluno que deseja remover?\n");
+        scanf("%d", &num_aluno);
+
+        if(op_principal == 1) {
+            for(int i = 0; i < MAX_ALUNOS; i++) {
+                if(alunos[i].num_aluno == num_aluno) {
+                    alunos[i].ativo = 0;
+                    printf("\n\nAluno removido com sucesso!\n\n");
+                    for(int f = 0; f < MAX_TRABALHOS; f++) {
                         alunos[i].trab_pratico[f].ativo = 0;
                     }
+                    break;
+                }else if (alunos[i].num_aluno != num_aluno && i == MAX_ALUNOS-1)
+                {
+                    printf("\n\nNão existe nenhum aluno com o número %d", num_aluno);
                 }
+                
+            }    
+        }else if (op_principal == 2){  
+            printf("Qual o número do trabalho que seja remover?\n");
+            scanf("%d", &num_trabalho);     
+            for(int i = 0; i < MAX_ALUNOS; i++) {
+                if(alunos[i].num_aluno == num_aluno) {
+                    for(int f = 0; f < MAX_TRABALHOS; f++) {
+                        if(alunos[i].trab_pratico[f].contador == num_trabalho) {
+                            alunos[i].trab_pratico[f].ativo = 0;
+                            printf("\n\nTrabalho removido com sucesso!\n\n");
+                            break;
+                        }else if (alunos[i].num_aluno == num_aluno && alunos[i].trab_pratico[f].contador != num_trabalho && f == MAX_TRABALHOS-1)
+                        {
+                            printf("\n\nNão existe nenhum trabalho com o indice %d", num_trabalho);
+                        }
+                        
+                    }
+                    break;
+                }else if (alunos[i].num_aluno != num_aluno && i == MAX_ALUNOS-1)
+                {
+                    printf("\n\nNão existe nenhum aluno com o número %d", num_aluno);
+                }
+                
             }
-        }
 
-        for(int i = 0; i < MAX_ALUNOS; i++) {
-            if(alunos[i].num_aluno == num_aluno) {
-                for(int f = 0; f < MAX_TRABALHOS; f++ ) {
-                    if(alunos[i].trab_pratico[f].ativo == 1) {
-                        alunos[i].trab_pratico[f].contador = count;
-                        count++;
+            for(int i = 0; i < MAX_ALUNOS; i++) {
+                if(alunos[i].num_aluno == num_aluno) {
+                    for(int f = 0; f < MAX_TRABALHOS; f++ ) {
+                        if(alunos[i].trab_pratico[f].ativo == 1) {
+                            alunos[i].trab_pratico[f].contador = count;
+                            count++;
+                        }
                     }
                 }
             }
+
+        }else
+        {
+            printf("\n\n Introduza uma opção válida!\n\n");
         }
+    
+        printf("\n\nDeseja alterar mais algum aluno ou?\n\n Sim - 1 \n Não - 2 \n\n");
+        scanf("%d", &op_secundaria);
+
+        if (op_secundaria == 2)
+        break;
+        
 
     }
+    
     
 }
 
@@ -325,9 +426,10 @@ void media_aluno() {
                 }
             }
             media_total = media_total/count_trabalhos;
-            printf("Média do aluno: %.2f \n\n", media_total);
+            printf("Média do aluno: %.2f \n\n ", media_total);
             media_alunos = 0;
             media_total = 0;
+            count_trabalhos =0;
         }
     }
 }
@@ -352,14 +454,15 @@ void media_num_aluno() {
                     printf("Peso: %.0f Nota: %0.2f Número: %d \n",alunos[i].trab_pratico[f].peso, alunos[i].trab_pratico[f].notas, alunos[i].trab_pratico[f].contador);
                     media_alunos = (alunos[i].trab_pratico[f].peso/100 * alunos[i].trab_pratico[f].notas);
                     media_total += media_alunos;
-                    count_trabalhos++;;
+                    count_trabalhos++;
                 }
             }
+            media_total = media_total/count_trabalhos;
+            printf("Média do aluno: %.2f \n\n ", media_total);
+            media_alunos = 0;
+            media_total = 0;
         }
     }
-    media_total = media_alunos/count_trabalhos;
-    printf("A Média do aluno é %.2f\n\n", media_alunos);
-
 }
 
 //! Alinea i) apresentar media e notas 
@@ -555,8 +658,10 @@ void guarda_dados() {
                 //fprintf(g,"\n");
             }
         }
+        printf("\n\nFicheiro guardado com sucesso!\n\n");
         fclose(g);
     }
+
 }
 
 void carrega_dados() {
